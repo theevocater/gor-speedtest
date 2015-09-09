@@ -49,23 +49,29 @@ func main() {
 	for scanner.Scan() {
 		encoded := scanner.Bytes()
 
-		buf := make([]byte, len(encoded)/2)
-		hex.Decode(buf, encoded)
-		kind := buf[0]
-		headerSize := bytes.IndexByte(buf, '\n') + 1
-		header := buf[:headerSize-1]
-		meta := bytes.Split(header, []byte(" "))
-		//id := string(meta[1])
-		ts, _ := strconv.ParseInt(string(meta[2]), 10, 64)
+		log.Println(len(encoded), encoded)
 
+		buf := make([]byte, hex.DecodedLen(len(encoded)))
+		hex.Decode(buf, encoded)
+
+		kind := buf[0]
 		if kind == RequestFlag {
 			os.Stdout.Write(encoded)
 		}
+		go handle(kind, buf)
+	}
+}
 
-		if kind == ResponseFlag {
-			report.Time(Settings.src, time.Duration(ts))
-		} else if kind == ReplayedResponseFlag {
-			report.Time(Settings.src, time.Duration(ts))
-		}
+func handle(kind byte, buf []byte) {
+	headerSize := bytes.IndexByte(buf, '\n') + 1
+	header := buf[:headerSize-1]
+	meta := bytes.Split(header, []byte(" "))
+	//id := string(meta[1])
+	ts, _ := strconv.ParseInt(string(meta[2]), 10, 64)
+
+	if kind == ResponseFlag {
+		report.Time(Settings.src, time.Duration(ts))
+	} else if kind == ReplayedResponseFlag {
+		report.Time(Settings.src, time.Duration(ts))
 	}
 }
