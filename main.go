@@ -64,7 +64,7 @@ func handle(kind byte, buf []byte) {
 	headerSize := bytes.IndexByte(buf, '\n') + 1
 	header := buf[:headerSize-1]
 	meta := bytes.Split(header, []byte(" "))
-	log.Println("meta", meta)
+	//log.Println("meta", meta)
 
 	//id := string(meta[1])
 	ts, _ := strconv.ParseInt(string(meta[2]), 10, 64)
