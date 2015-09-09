@@ -39,7 +39,10 @@ func main() {
 		log.Fatal("must supply graphite server and prefix")
 	}
 
-	report.NewRecorder().ReportTo(Settings.graphite, Settings.prefix).SetAsDefault()
+	report.NewRecorder().
+		ReportTo(Settings.graphite, Settings.prefix).
+		LogToConsole().
+		SetAsDefault()
 
 	scanner := bufio.NewScanner(os.Stdin)
 
