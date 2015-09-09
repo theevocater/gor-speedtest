@@ -69,7 +69,7 @@ func handle(kind byte, buf []byte) {
 	id := string(meta[1])
 	ts, _ := strconv.ParseInt(string(meta[2]), 10, 64)
 
-	log.Println(id, ts)
+	log.Println(kind, id, ts)
 
 	if kind == ResponseFlag {
 		report.Time(Settings.src, time.Duration(ts))
