@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"encoding/hex"
 	"flag"
+	"log"
 	"os"
 	"strconv"
 	"time"
@@ -33,6 +34,10 @@ func main() {
 	flag.StringVar(&Settings.graphite, "graphite", "", "name for traffic dst")
 	flag.StringVar(&Settings.prefix, "prefix", "", "prefix for reported timings")
 	flag.Parse()
+
+	if Settings.graphite == "" || Settings.prefix == "" {
+		log.Fatal("must supply graphite server and prefix")
+	}
 
 	report.NewRecorder().ReportTo(Settings.graphite, Settings.prefix).SetAsDefault()
 
